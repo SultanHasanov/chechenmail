@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import LoginPage from "./components/LoginPage";
-import HomePage from "./components/HomePage";
+// import HomePage from "./components/HomePage";
 import ProtectedRoute from "./components/ProtectedRoute";
-import ActiveTasks from "./pages/ActiveTasks"; // Страница активных задач
+import Home from "./pages/Home"; // Страница активных задач
 import TaskDetails from "./pages/TaskDetails"; // Страница с деталями задачи
 
 const App = () => {
@@ -23,23 +23,21 @@ const App = () => {
   return (
     <Router>
       <Routes>
-        {/* Существующие маршруты */}
-        <Route path="/login" element={<LoginPage />} />
-        <Route
+        <Route path="/" element={<LoginPage />} />
+        {/* <Route
           path="/home"
           element={
             <ProtectedRoute>
               <HomePage />
             </ProtectedRoute>
           }
-        />
+        /> */}
 
-        {/* Новый маршрут для активных задач */}
         <Route
-          path="/tasks"
+          path="/home"
           element={
             <ProtectedRoute>
-              <ActiveTasks tasks={tasks} setTasks={setTasks} />
+              <Home tasks={tasks} setTasks={setTasks} />
             </ProtectedRoute>
           }
         />

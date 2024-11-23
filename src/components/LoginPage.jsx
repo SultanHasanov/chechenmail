@@ -10,17 +10,17 @@ const LoginPage = () => {
   const [rememberMe, setRememberMe] = useState(false);
 
   const handleLogin = (values) => {
-    const { username, password } = values;
+    const { username, password, fullName } = values;
 
     if (username === AUTH_CREDENTIALS.username && password === AUTH_CREDENTIALS.password) {
-      const sessionData = { username, password, loggedIn: true };
+      const sessionData = { username, password, fullName, loggedIn: true };
       if (rememberMe) {
         localStorage.setItem("auth", JSON.stringify(sessionData));
       } else {
         sessionStorage.setItem("auth", JSON.stringify(sessionData));
       }
-      message.success("Успешный вход!");
-      navigate("/tasks");
+      message.success(`Успешный вход, ${fullName || "пользователь"}!`);
+      navigate("/home");
     } else {
       message.error("Неверный логин или пароль");
     }
@@ -35,6 +35,7 @@ const LoginPage = () => {
         form.setFieldsValue({
           username: session.username,
           password: session.password,
+          fullName: session.fullName || "", // Предзаполнение имени, если сохранено
         });
         setRememberMe(true); // Установить "Запомнить меня" в true
       }
@@ -42,7 +43,7 @@ const LoginPage = () => {
   }, [form]);
 
   return (
-    <div style={{ maxWidth: 250, margin: "100px auto" }}>
+    <div style={{ maxWidth: 300, margin: "100px auto" }}>
       <h1>Авторизация</h1>
       <Form
         layout="vertical"
@@ -52,6 +53,12 @@ const LoginPage = () => {
           remember: rememberMe,
         }}
       >
+        <Form.Item
+          name="fullName"
+          rules={[{ required: true, message: "Пожалуйста, введите ваше имя!" }]}
+        >
+          <Input style={{ height: "40px", fontSize: "17px" }} placeholder="Введите имя" />
+        </Form.Item>
         <Form.Item
           name="username"
           rules={[{ required: true, message: "Пожалуйста, введите логин!" }]}
@@ -68,7 +75,7 @@ const LoginPage = () => {
           <Checkbox onChange={(e) => setRememberMe(e.target.checked)}>Запомнить меня</Checkbox>
         </Form.Item>
         <Form.Item>
-          <Button style={{ padding: "20px", fontSize: "20px" }} type="primary" htmlType="submit" block>
+          <Button style={{ padding: "10px", fontSize: "18px" }} type="primary" htmlType="submit" block>
             Войти
           </Button>
         </Form.Item>

@@ -3,7 +3,8 @@ import TaskForm from "../components/TaskForm";
 import TaskCard from "../components/TaskCard";
 import '../App.css'
 import { Button } from "antd";
-const ActiveTasks = ({tasks, setTasks}) => {
+import HomePage from "../components/HomePage";
+const Home = ({tasks, setTasks}) => {
   // const [tasks, setTasks] = useState([]);
   
 
@@ -35,8 +36,9 @@ const ActiveTasks = ({tasks, setTasks}) => {
         <TaskCard key={task.id} task={task} />
       ))}
 </div>
+<HomePage/>
     </div>
   );
 };
 
-export default ActiveTasks;
+export default Home;
