@@ -75,7 +75,7 @@ const LoginPage = () => {
           <Checkbox onChange={(e) => setRememberMe(e.target.checked)}>Запомнить меня</Checkbox>
         </Form.Item>
         <Form.Item>
-          <Button style={{ padding: "10px", fontSize: "18px" }} type="primary" htmlType="submit" block>
+          <Button style={{ padding: "20px", fontSize: "22px" }} type="primary" htmlType="submit" block>
             Войти
           </Button>
         </Form.Item>
