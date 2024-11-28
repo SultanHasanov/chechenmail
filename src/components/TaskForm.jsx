@@ -1,13 +1,29 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Form, Input, DatePicker, Upload, Checkbox, Button, Select, message, Flex } from "antd";
 import { UploadOutlined } from "@ant-design/icons";
+import usersStore from "../store/UsersStore";
+import { toJS } from "mobx";
 
 const { TextArea } = Input;
 
 const TaskForm = ({ onAddTask }) => {
   const [form] = Form.useForm();
   const [sendToAll, setSendToAll] = useState(false);
+  const [loading, setLoading] = useState(true);
 
+
+  useEffect(() => {
+    const fetchUsersData = async () => {
+      await usersStore.fetchUsers();
+      setLoading(false);
+    };
+
+    fetchUsersData();
+  }, []);
+
+  const users = toJS(usersStore.users);
+
+  // console.log("Данные о пользователях из MobX:", users);
   const handleFinish = (values) => {
     const task = {
       ...values,
@@ -17,6 +33,33 @@ const TaskForm = ({ onAddTask }) => {
     onAddTask(task);
     form.resetFields();
     message.success("Задача успешно добавлена!");
+  };
+
+
+  const handleSchoolChange = (selectedSchoolIds) => {
+    // Извлекаем все школы
+    const allSchools = toJS(usersStore.users); 
+
+    // Находим имена школ по выбранным ID
+    const selectedSchoolNames = allSchools
+      .filter((school) => selectedSchoolIds.includes(school.id)) // Фильтруем школы по ID
+      .map((school) => school.username); // Извлекаем имя школы
+
+    console.log("Выбранные школы:", selectedSchoolNames); // Выводим имена выбранных школ
+  };
+
+  const handleSchoolChekbox = (e) => {
+    const allSchools = toJS(usersStore.users); 
+    const isChecked = e.target.checked;
+    setSendToAll(isChecked); // Изменяем состояние чекбокса
+    if (isChecked) {
+      const schoolNames = allSchools
+      console.log("Чекбокс включен.", schoolNames);
+    } else {
+      const schoolNames = null
+      console.log("Чекбокс выключен." , schoolNames);
+    }
+
   };
 
   return (
@@ -66,16 +109,17 @@ const TaskForm = ({ onAddTask }) => {
         <DatePicker style={{ width: "100%" }} />
       </Form.Item>
 
-      <Form.Item label="Добавить файл" name="file">
+      {/* <Form.Item label="Добавить файл" name="file">
         <Upload beforeUpload={() => false} maxCount={1}>
           <Button icon={<UploadOutlined />}>Загрузить файл</Button>
         </Upload>
-      </Form.Item>
+      </Form.Item> */}
 
       <Form.Item name="schools" label="Школы">
+      <div>
         <Checkbox
           checked={sendToAll}
-          onChange={(e) => setSendToAll(e.target.checked)}
+          onChange={handleSchoolChekbox}
           style={{ marginBottom: 8 }}
         >
           Отправить всем школам
@@ -84,13 +128,15 @@ const TaskForm = ({ onAddTask }) => {
           <Select
             mode="multiple"
             placeholder="Выберите школы"
-            options={[
-              { label: "Школа 1", value: "school1" },
-              { label: "Школа 2", value: "school2" },
-              { label: "Школа 3", value: "school3" },
-            ]}
+            options={users.map((user) => ({
+              label: user.username, // предполагаем, что у каждого объекта есть поле "name"
+              value: user.id, // предполагаем, что у каждого объекта есть поле "id"
+            }))}
+            onChange={handleSchoolChange} // Добавляем обработчик изменения
+            loading={loading} // Показываем индикатор загрузки
           />
         )}
+        </div>
       </Form.Item>
 
       <Form.Item
