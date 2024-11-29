@@ -18,7 +18,7 @@ class AuthStore {
     this.error = null;
 
     try {
-      const response = await axios.post("http://90.156.156.78:8080/login", credentials);
+      const response = await axios.post("https://90.156.156.78:8080/login", credentials);
       const { token, username, role } = response.data;
 
       this.token = token;
