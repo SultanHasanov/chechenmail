@@ -17,7 +17,7 @@ const LoginPage = () => {
 
     try {
       // Выполняем запрос на сервер для авторизации
-      const response = await axios.post("http://90.156.156.78:8080/login", {
+      const response = await axios.post("https://90.156.156.78:8080/login", {
         username,
         password,
       });
