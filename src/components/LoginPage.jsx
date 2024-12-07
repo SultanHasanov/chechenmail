@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Form, Input, Button, Checkbox, message } from "antd";
+import { Form, Input, Button, Checkbox, message, Switch } from "antd";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
@@ -8,7 +8,7 @@ const LoginPage = () => {
   const [form] = Form.useForm(); // Хук для управления формой
   const [rememberMe, setRememberMe] = useState(false);
   const [isLoading, setIsLoading] = useState(false); // Состояние загрузки
-
+  const [isHome, setIsHome] = useState(false); // Состояние для Switch
   // Обработчик отправки формы
   const handleLogin = async (values) => {
     const { username, password } = values;
@@ -17,17 +17,19 @@ const LoginPage = () => {
 
     try {
       // Выполняем запрос на сервер для авторизации
-      const response = await axios.post("https://90.156.156.78:8080/login", {
-        username,
-        password,
-      });
-
+      const response = await axios.post(
+        "https://90.156.156.78:8080/auth/login",
+        {
+          username,
+          password,
+        }
+      );
+console.log(response.data)
       const { token } = response.data;
 
       // Сохраняем токен и роль в localStorage (или в MobX, Redux и т.д. для дальнейшего использования)
       localStorage.setItem("authToken", token);
       localStorage.setItem("username", username);
-
 
       message.success("Авторизация успешна!");
 
@@ -38,6 +40,13 @@ const LoginPage = () => {
     } finally {
       setIsLoading(false); // Отключаем индикатор загрузки
     }
+  };
+
+  // Toggle-переключатель
+
+  const handleSwitchChange = (checked) => {
+    setIsHome(checked);
+    navigate(checked ? "/home" : "/"); // Переключаем между маршрутами
   };
 
   return (
@@ -70,9 +79,7 @@ const LoginPage = () => {
           />
         </Form.Item>
         <Form.Item name="remember" valuePropName="checked">
-          <Checkbox
-            onChange={(e) => setRememberMe(e.target.checked)}
-          >
+          <Checkbox onChange={(e) => setRememberMe(e.target.checked)}>
             Запомнить меня
           </Checkbox>
         </Form.Item>
@@ -86,6 +93,22 @@ const LoginPage = () => {
           >
             Войти
           </Button>
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+            }}
+          >
+            <span style={{ fontSize: "16px" }}>
+              {isHome ? "На /home" : "На /"}
+            </span>
+            <Switch
+              checked={isHome}
+              onChange={handleSwitchChange} // Обработчик Switch
+              style={{ marginLeft: "10px" }}
+            />
+          </div>
         </Form.Item>
       </Form>
     </div>

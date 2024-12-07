@@ -18,16 +18,18 @@ class AuthStore {
     this.error = null;
 
     try {
-      const response = await axios.post("https://90.156.156.78:8080/login", credentials);
-      const { token, username, role } = response.data;
+      const response = await axios.post(
+        "https://90.156.156.78:8080/auth/login",
+        credentials
+      );
+      const { token, username, role, ID } = response.data;
 
       this.token = token;
       this.username = username;
       this.role = role;
-
+console.log(token)
       // Сохраняем токен в localStorage
       localStorage.setItem("authToken", token);
-
     } catch (err) {
       this.error = err.response?.data?.message || "Ошибка авторизации";
     } finally {
