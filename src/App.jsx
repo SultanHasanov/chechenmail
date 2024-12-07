@@ -17,8 +17,6 @@ const App = () => {
     localStorage.setItem("tasks", JSON.stringify(tasks));
   }, [tasks]); // Эта функция сработает при каждом изменении tasks
 
- 
-  console.log(tasks)
 
   return (
     <Router>
