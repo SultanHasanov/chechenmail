@@ -24,7 +24,7 @@ const LoginPage = () => {
           password,
         }
       );
-console.log(response.data)
+// console.log(response.data)
       const { token } = response.data;
 
       // Сохраняем токен и роль в localStorage (или в MobX, Redux и т.д. для дальнейшего использования)
